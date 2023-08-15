@@ -4,6 +4,7 @@
 //!  2. receive user input
 //!
 
+use log::{error, trace};
 use std::{io, process};
 
 use self::{cmd::parse_cmd, prompt::print_prompt};
@@ -15,9 +16,15 @@ pub fn read_input() -> String {
     let mut user_input = String::default();
     match io::stdin().read_line(&mut user_input) {
         Ok(cnt) => {
-            // TODO: log this
+            let remove_tail_newline = user_input.trim_end();
+            trace!(
+                "read from user input [{}], cnt={}",
+                remove_tail_newline,
+                cnt
+            );
         }
         Err(err) => {
+            error!("error when read stdin: {}", err);
             process::exit(1);
         }
     };
